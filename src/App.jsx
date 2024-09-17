@@ -1,4 +1,4 @@
-// import React from "react"
+import React from "react"
 import Header from "./components/Header";
 import Meme from "./components/meme";
 
@@ -12,4 +12,4 @@ const App = () => {
   )
 }
 
-export default App
+export default App;
