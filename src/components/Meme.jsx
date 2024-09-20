@@ -1,34 +1,40 @@
-import React from "react"
-import memesData from "../memesData"
+import React from "react";
 
- const Meme =() => {
+const Meme = () => {
     const [meme, setMeme] = React.useState({
         topText: "",
         bottomText: "",
-        randomImage: "http://i.imgflip.com/1bij.jpg" 
-    })
-    const [allMemeImages, setAllMemeImages] = React.useState(memesData)
-    
-    
-    const getMemeImage = () => {
-        const memesArray = allMemeImages.data.memes
-        const randomNumber = Math.floor(Math.random() * memesArray.length)
-        const url = memesArray[randomNumber].url
+        randomImage: "http://i.imgflip.com/1bij.jpg"
+    });
+    const [allMemes, setAllMemes] = React.useState([]);
+
+    React.useEffect(() => {
+        const fetchMemes = async () => {
+            const res = await fetch("https://api.imgflip.com/get_memes");
+            const data = await res.json();
+            setAllMemes(data.data.memes);
+        };
+
+        fetchMemes();
+    }, []);
+
+    function getMemeImage() {
+        const randomNumber = Math.floor(Math.random() * allMemes.length);
+        const url = allMemes[randomNumber].url;
         setMeme(prevMeme => ({
             ...prevMeme,
             randomImage: url
-        }))
-        
+        }));
     }
-    
-    const handleChange = (event) => {
-        const {name, value} = event.target
+
+    function handleChange(event) {
+        const { name, value } = event.target;
         setMeme(prevMeme => ({
             ...prevMeme,
             [name]: value
-        }))
+        }));
     }
-    
+
     return (
         <main>
             <div className="form">
@@ -56,12 +62,12 @@ import memesData from "../memesData"
                 </button>
             </div>
             <div className="meme">
-                <img src={meme.randomImage} className="meme--image" />
+                <img src={meme.randomImage} className="meme--image" alt="Meme" />
                 <h2 className="meme--text top">{meme.topText}</h2>
                 <h2 className="meme--text bottom">{meme.bottomText}</h2>
             </div>
         </main>
-    )
+    );
 }
 
 export default Meme;
